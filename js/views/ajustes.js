@@ -4,6 +4,7 @@ import { APP } from '../config.js';
 import { ic } from '../icons.js';
 import { esc, toast, confirmar, copiar } from '../ui.js';
 import { aplicarTema } from '../app.js';
+import { instalado, instalar } from '../instalar.js';
 
 export function render(el) {
   const p = S.perfil;
@@ -26,6 +27,10 @@ export function render(el) {
         <h2 style="margin-top:8px">Aparência</h2>
         <div class="seg">${[['claro', 'Claro'], ['escuro', 'Escuro'], ['sistema', 'Igual ao aparelho']].map(([k, r]) => `<button data-tema="${k}" class="${(p.tema || 'claro') === k ? 'on' : ''}">${r}</button>`).join('')}</div>
       </div>
+    </div>
+    <div class="cartao secao entre" style="flex-wrap:wrap;gap:12px">
+      <div><h2>App no celular</h2><p class="sub">${instalado() ? 'O IEM já está instalado neste aparelho.' : 'Instale o IEM na tela inicial: abre como app e funciona sem internet.'}</p></div>
+      ${instalado() ? '' : `<button class="btn primario" id="instalar">${ic('download', 16)}Instalar app</button>`}
     </div>
     <div class="cartao secao grade">
       <h2>Seus dados</h2>
@@ -58,6 +63,7 @@ export function render(el) {
   campo('#novos', 'novosPorDia', (v) => Math.max(0, +v || 0));
   campo('#mq', 'metaQuestoesSemana', (v) => Math.max(0, +v || 0));
   el.querySelectorAll('[data-tema]').forEach((b) => b.onclick = () => { p.tema = b.dataset.tema; salvar(); aplicarTema(); render(el); });
+  if ($('#instalar')) $('#instalar').onclick = instalar;
   $('#exp').onclick = exportar;
   $('#copbk').onclick = async () => toast((await copiar(JSON.stringify(S))) ? 'Backup copiado. Cole em um arquivo .json ou nas suas notas.' : 'Não consegui copiar');
   $('#imp').onchange = async (e) => {

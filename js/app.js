@@ -5,6 +5,7 @@ import { ic } from './icons.js';
 import { esc } from './ui.js';
 import { foco } from './foco.js';
 import { APP } from './config.js';
+import { instalado, instalar, aoMudarInstalacao } from './instalar.js';
 
 const NAV = [
   { r: 'hoje', rot: 'Hoje', ic: 'house' },
@@ -64,9 +65,11 @@ export function hud() {
   const seq = sequencia();
   const f = foco.estado();
   el.innerHTML = `
+    ${!instalado() ? `<button class="hud-foco" id="hud-instalar" title="Instalar o IEM como app">${ic('download', 14)}Instalar</button>` : ''}
     ${f.ativo ? `<button class="hud-foco" onclick="location.hash='#/foco'">${ic('timer', 14)}<span id="hud-relogio">${f.texto}</span></button>` : ''}
     ${dias !== null && dias >= 0 ? `<span title="Dias até a prova">${ic('flag', 15)}${dias === 0 ? 'É hoje' : dias + (dias === 1 ? ' dia' : ' dias')}</span>` : ''}
     <span title="Dias seguidos estudando">${ic('flame', 15)}${seq}</span>`;
+  const bi = document.getElementById('hud-instalar'); if (bi) bi.onclick = instalar;
 }
 
 const TITULOS = { hoje: 'Hoje', escada: 'Rumo ao 45', cards: 'Flashcards', questoes: 'Questões', simulado: 'Simulado', plano: 'Plano de estudos', progresso: 'Progresso', metodos: 'Métodos de prova', foco: 'Foco', mapas: 'Mapas mentais', ajustes: 'Ajustes', mais: 'Mais' };
@@ -105,11 +108,12 @@ async function iniciar() {
   document.title = APP.nome;
   casca();
   aoMudar(hud);
+  aoMudarInstalacao(hud);
   foco.aoTique(() => { const el = document.getElementById('hud-relogio'); if (el) el.textContent = foco.estado().texto; else hud(); });
   await carregarIndice().catch((e) => console.error('Índice de questões', e));
   window.addEventListener('hashchange', rotear);
   rotear();
-  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
 iniciar();
