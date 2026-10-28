@@ -29,8 +29,8 @@ export function render(el) {
       </div>
     </div>
     <div class="cartao secao entre" style="flex-wrap:wrap;gap:12px">
-      <div><h2>App no celular</h2><p class="sub">${instalado() ? 'O IEM já está instalado neste aparelho.' : 'Instale o IEM na tela inicial: abre como app e funciona sem internet.'}</p></div>
-      ${instalado() ? '' : `<button class="btn primario" id="instalar">${ic('download', 16)}Instalar app</button>`}
+      <div><h2>App no celular</h2><p class="sub">${instalado() ? 'Você está usando o IEM pelo ícone instalado.' : 'Instale o IEM na tela inicial: abre como app e funciona sem internet.'}</p></div>
+      <button class="btn ${instalado() ? '' : 'primario'}" id="instalar">${ic('download', 16)}${instalado() ? 'Como instalar' : 'Instalar app'}</button>
     </div>
     <div class="cartao secao grade">
       <h2>Seus dados</h2>
