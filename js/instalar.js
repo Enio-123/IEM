@@ -31,3 +31,13 @@ export async function instalar() {
     <p class="sub">O IEM vira um app na tela inicial, abre em tela cheia e funciona sem internet depois da primeira vez.</p>${aviso}
     <ol class="lista">${passos.map((p, i) => `<li><b>${i + 1}.</b> <span>${p}</span></li>`).join('')}</ol>`);
 }
+
+// Quem chega pela página de acesso (?instalar) vê o convite logo ao abrir.
+// O navegador só deixa abrir o pedido de instalação depois de um toque, por isso o botão.
+export function ofertarInstalacao() {
+  if (instalado()) return;
+  const { el, fechar } = janela('Instalar o IEM', `
+    <p class="sub">Instale o IEM na tela inicial do celular: abre como app, em tela cheia, e funciona sem internet.</p>
+    <div class="linha-acoes" style="margin:0"><button class="btn primario" data-ok>${ic('download', 16)}Instalar agora</button><button class="btn" data-fechar>Agora não</button></div>`);
+  el.querySelector('[data-ok]').onclick = () => { fechar(); instalar(); };
+}

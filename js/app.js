@@ -5,7 +5,7 @@ import { ic } from './icons.js';
 import { esc } from './ui.js';
 import { foco } from './foco.js';
 import { APP } from './config.js';
-import { instalado, instalar, aoMudarInstalacao } from './instalar.js';
+import { instalado, instalar, aoMudarInstalacao, ofertarInstalacao } from './instalar.js';
 
 const NAV = [
   { r: 'hoje', rot: 'Hoje', ic: 'house' },
@@ -113,6 +113,10 @@ async function iniciar() {
   await carregarIndice().catch((e) => console.error('Índice de questões', e));
   window.addEventListener('hashchange', rotear);
   rotear();
+  if (new URLSearchParams(location.search).has('instalar')) {
+    history.replaceState(null, '', location.pathname + location.hash);
+    ofertarInstalacao();
+  }
   if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
